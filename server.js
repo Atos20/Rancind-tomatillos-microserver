@@ -24,37 +24,37 @@ app.get('/api/v1/cheerleading', (request, response) => {
 // Declare COMMENTING endpoints here 👇
 app.post('/api/v1/comments', (request, response) => {
   const requiredProperties = [ "comment", "author", "movieId" ];
-  const receivedProperties = Object.keys(req.body);
+  const receivedProperties = Object.keys(request.body);
 
   for (let property of requiredProperties) {
     if (!receivedProperties.includes(property)) {
-      return res.status(422).json({error: `Cannot POST: missing property ${property} in request.`});
+      return response.status(422).json({error: `Cannot POST: missing property ${property} in request.`});
     }
   }
   const newComment = {
-    ...req.body,
+    ...request.body,
     id: Date.now()
   }
 
   app.locals.comments.push(newComment);
-  return res.status(201).json({ newComment: newComment });
+  return response.status(201).json({ newComment: newComment });
 })
 
 app.get('/api/v1/comments/movie/:movieId', (request, response) => {
-  const { movieId } = req.params;
+  const { movieId } = request.params;
 
   const commentsByMovie = app.locals.comments.filter(comment => comment.movieId === movieId)
-  res.status(200).json({ comments: commentsByMovie });
+  response.status(200).json({ comments: commentsByMovie });
 })
 
 // Declare FAVORITING endpoints here 👇
 app.post('/api/v1/favorites', (request, response) => {
   const requiredProperties = [ "id" ];
-  const receivedProperties = Object.keys(req.body);
+  const receivedProperties = Object.keys(request.body);
 
   for (let property of requiredProperties) {
     if (!receivedProperties.includes(property)) {
-      return res.status(422).json({error: `Cannot POST: missing property ${property} in request.`});
+      return response.status(422).json({error: `Cannot POST: missing property ${property} in request.`});
     }
   }
 
@@ -68,7 +68,7 @@ app.post('/api/v1/favorites', (request, response) => {
     message = `Movie with an id of ${receivedProperties.id} was un-favorited`
   }
 
-  return res.status(201).json({ message });
+  return response.status(201).json({ message });
 })
 
 app.get('/api/v1/favorites', (request, response) => {
