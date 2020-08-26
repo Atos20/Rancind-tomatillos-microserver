@@ -14,7 +14,7 @@ app.use(cors());
 app.locals.title = 'Rancid Tomatillos Microservice Server';
 app.locals.encouragement = ["You can do it!", "I believe in you!", "You got this!"];
 app.locals.comments = []
-app.local.favoriteMovieIds = []
+app.locals.favoriteMovieIds = []
 
 // Example GET endpoint
 app.get('/api/v1/cheerleading', (request, response) => {
