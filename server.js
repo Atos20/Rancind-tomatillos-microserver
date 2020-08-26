@@ -22,8 +22,9 @@ app.get('/api/v1/cheerleading', (request, response) => {
 })
 
 // Declare COMMENTING endpoints here 👇
-app.post('/api/v1/comments', (request, response) => {
-  const requiredProperties = [ "comment", "author", "movieId" ];
+app.post('/api/v1/movies/:movieId/comments', (request, response) => {
+  const { movieId } = request.params;
+  const requiredProperties = [ "comment", "author" ];
   const receivedProperties = Object.keys(request.body);
 
   for (let property of requiredProperties) {
@@ -33,6 +34,7 @@ app.post('/api/v1/comments', (request, response) => {
   }
   const newComment = {
     ...request.body,
+    movieId: +movieId,
     id: Date.now()
   }
 
@@ -40,10 +42,10 @@ app.post('/api/v1/comments', (request, response) => {
   return response.status(201).json({ newComment: newComment });
 })
 
-app.get('/api/v1/comments/movie/:movieId', (request, response) => {
+app.get('/api/v1/movies/:movieId/comments', (request, response) => {
   const { movieId } = request.params;
 
-  const commentsByMovie = app.locals.comments.filter(comment => comment.movieId === movieId)
+  const commentsByMovie = app.locals.comments.filter(comment => comment.movieId === +movieId)
   response.status(200).json({ comments: commentsByMovie });
 })
 
@@ -57,26 +59,24 @@ app.post('/api/v1/favorites', (request, response) => {
       return response.status(422).json({error: `Cannot POST: missing property ${property} in request.`});
     }
   }
-
   let message;
-  const foundMovieIndex = app.locals.favoriteMovies.findIndex(movieId => movieId === receivedProperties.id);
-  if (!foundMovieIndex) {
-    app.local.favoriteMovieIds.push(receivedProperties.id);
-    message = `Movie with an id of ${receivedProperties.id} was favorited`
+  const movieId = +request.body.id
+  const foundMovieIndex = app.locals.favoriteMovieIds.findIndex(id => id === movieId);
+  
+  if (foundMovieIndex < 0) {
+    app.locals.favoriteMovieIds.push(movieId);
+    message = `Movie with an id of ${movieId} was favorited`
   } else {
-    app.local.favoriteMovieIds.splice(foundMovieIndex, 1);
-    message = `Movie with an id of ${receivedProperties.id} was un-favorited`
+    app.locals.favoriteMovieIds.splice(foundMovieIndex, 1);
+    message = `Movie with an id of ${movieId} was un-favorited`
   }
-
+  console.log(app.locals.favoriteMovieIds)
   return response.status(201).json({ message });
 })
 
 app.get('/api/v1/favorites', (request, response) => {
-  response.status(200).json(app.locals.favoritedMovieIds);
+  response.status(200).json(app.locals.favoriteMovieIds);
 })
-
-// Declare WATCHED endpoints here 👇 (only for teams of 3)
-
 
 // Listen for queries to this server
 app.listen(app.get('port'), () => console.log(`${app.locals.title} is now listening on port ${app.get('port')}!`));
