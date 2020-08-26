@@ -59,6 +59,7 @@ app.post('/api/v1/favorites', (request, response) => {
       return response.status(422).json({error: `Cannot POST: missing property ${property} in request.`});
     }
   }
+  
   let message;
   const movieId = +request.body.id
   const foundMovieIndex = app.locals.favoriteMovieIds.findIndex(id => id === movieId);
@@ -70,7 +71,7 @@ app.post('/api/v1/favorites', (request, response) => {
     app.locals.favoriteMovieIds.splice(foundMovieIndex, 1);
     message = `Movie with an id of ${movieId} was un-favorited`
   }
-  console.log(app.locals.favoriteMovieIds)
+
   return response.status(201).json({ message });
 })
 
