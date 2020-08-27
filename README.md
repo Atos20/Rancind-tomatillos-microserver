@@ -26,6 +26,14 @@ The server will run locally on `http://localhost:3001`
 | `/api/v1/favorites` | GET | N/A | `[movieId<Number>, ...]`  |
 | `/api/v1/favorites` | POST | `{ id: <Number>}` | `{message: "Movie with an id of <id> was (un)favorited}`  |
 
+## Deployment 
+If you choose to deploy this repo, make sure to push it up toi a new remote  
+
+For deployment with Heroku (recommended), you'll want to follow these instructions:
+- [Getting started on heroku with node js](https://devcenter.heroku.com/articles/getting-started-with-nodejs?singlepage=true)
+  - only worry about the instructions through "View Logs"
+
+
 ## Links
 
 - [Rancid Tomatillos spec](https://frontend.turing.io/projects/module-3/rancid-tomatillos-v2.html)
